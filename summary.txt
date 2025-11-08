@@ -1,0 +1,65 @@
+Collection Summary
+Account                  | Payee/Payer             | Receipts  | Payments  | Net       
+-------------------------+-------------------------+-----------+-----------+-----------
+Arunagiri                | Arunagiri maintenance   | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | A006                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | A103                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | A202                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | A301                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | A303                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | A404                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | Arnab b402              | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | B001                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | b002 manoj              | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | b004 madhusudhan        | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | B203                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | B205                    | 10,500.00 | 0.00      | 10,500.00 
+Charitha Blossom - Arnab | b206                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | b301 ramesh             | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | B302                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | B303 abraham            | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | b305                    | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | Chandu B101             | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | gloves                  | 0.00      | 199.00    | -199.00   
+Charitha Blossom - Arnab | housekeeping            | 0.00      | 16,000.00 | -16,000.00
+Charitha Blossom - Arnab | malappa                 | 0.00      | 7,500.00  | -7,500.00 
+Charitha Blossom - Arnab | mallikarjuna b204       | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | mask                    | 0.00      | 265.00    | -265.00   
+Charitha Blossom - Arnab | phenyl                  | 0.00      | 1,400.00  | -1,400.00 
+Charitha Blossom - Arnab | Saicharan b404          | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | shivamurthy maintenance | 31,500.00 | 0.00      | 31,500.00 
+Charitha Blossom - Arnab | shraban B202            | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | Sky water supply        | 0.00      | 98,600.00 | -98,600.00
+Charitha Blossom - Arnab | sukumar B406            | 3,500.00  | 0.00      | 3,500.00  
+Charitha Blossom - Arnab | VP security service     | 0.00      | 27,000.00 | -27,000.00
+CharithaBlossom venkat   | b103                    | 3,500.00  | 0.00      | 3,500.00  
+CharithaBlossom venkat   | b105 Venkat             | 3,500.00  | 0.00      | 3,500.00  
+CharithaBlossom venkat   | Miscellaneous           | 0.00      | 1,200.00  | -1,200.00 
+CharithaBlossom venkat   | Pandu                   | 0.00      | 1,000.00  | -1,000.00 
+CharithaBlossom venkat   | water level indicator   | 0.00      | 300.00    | -300.00   
+CharithaBlossom-Anand    | A wings owners          | 52,500.00 | 0.00      | 52,500.00 
+CharithaBlossom-Anand    | BESCOM A                | 0.00      | 3,929.00  | -3,929.00 
+CharithaBlossom-Anand    | BESCOM B                | 0.00      | 5,247.00  | -5,247.00 
+CharithaBlossom-Anand    | bwssb                   | 0.00      | 43,212.00 | -43,212.00
+CharithaBlossom-Anand    | lift amc                | 0.00      | 18,634.00 | -18,634.00
+CharithaBlossom-Dharnesh | dharnesh 8 flats        | 28,000.00 | 0.00      | 28,000.00 
+Manoj Singh              | A001                    | 3,500.00  | 0.00      | 3,500.00  
+
+Statement of Accounts
+Period: 2025-10-01 to 2025-10-31
+Opening Balance: 536,243.00
+Closing Balance: 521,757.00
+Total Receipts: 210,000.00
+Total Payments: 224,486.00
+
+Category      | Receipts   | Payments  | Net       
+--------------+------------+-----------+-----------
+BBMP          | 0.00       | 8,500.00  | -8,500.00 
+BESCOM        | 0.00       | 9,176.00  | -9,176.00 
+Income        | 210,000.00 | 0.00      | 210,000.00
+bwssb         | 0.00       | 43,212.00 | -43,212.00
+housekeeping  | 0.00       | 17,864.00 | -17,864.00
+lift          | 0.00       | 18,634.00 | -18,634.00
+miscellaneous | 0.00       | 1,500.00  | -1,500.00 
+security      | 0.00       | 27,000.00 | -27,000.00
+water tanker  | 0.00       | 98,600.00 | -98,600.00
