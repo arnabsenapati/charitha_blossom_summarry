@@ -10,6 +10,7 @@ from typing import Iterable
 from .formatting import format_account_summary, format_collection_summary
 from .loader import filter_by_date, load_transactions
 from .payee_map import load_payee_mapping, normalize_label
+from .payments_map import load_payment_rules
 from .periods import last_month_range
 from .summary import build_account_summary, build_collection_summary
 from .excel import update_paid_columns
@@ -109,6 +110,14 @@ def parse_args(argv: Iterable[str] | None = None) -> argparse.Namespace:
             "Defaults to payee_mapping.csv in the current directory."
         ),
     )
+    parser.add_argument(
+        "--payments-map",
+        type=Path,
+        help=(
+            "CSV mapping file describing how expenses feed the Account sheet Payments column. "
+            "Defaults to account_payments_mapping.csv in the current directory."
+        ),
+    )
     return parser.parse_args(argv)
 
 
@@ -153,12 +162,16 @@ def run(argv: Iterable[str] | None = None) -> str:
             raise SystemExit(f"Payee mapping file not found: {map_path}")
         try:
             payee_map = load_payee_mapping(map_path)
+            payments_map_path = args.payments_map or Path("account_payments_mapping.csv")
+            payment_rules = load_payment_rules(payments_map_path)
             fixed_paid_overrides = {label: args.fixed_paid_amount for label in ALWAYS_PAID_LABELS}
             update_paid_columns(
                 Path(args.excel_template),
                 Path(args.excel_output),
                 collection_rows,
+                period_transactions,
                 payee_map=payee_map,
+                payment_rules=payment_rules,
                 fixed_paid_overrides=fixed_paid_overrides,
                 period_start=period_start,
                 period_end=period_end,

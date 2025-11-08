@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from datetime import date
 from typing import Dict, Iterable, List, Sequence, Tuple
 
+
 from .models import Transaction
 
 
@@ -34,6 +35,15 @@ class AccountCategoryRow:
 
 
 @dataclass(frozen=True)
+class AccountBalanceRow:
+    account: str
+    opening_balance: float
+    receipts: float
+    payments: float
+    closing_balance: float
+
+
+@dataclass(frozen=True)
 class AccountSummary:
     period_start: date
     period_end: date
@@ -42,6 +52,17 @@ class AccountSummary:
     total_receipts: float
     total_payments: float
     categories: Sequence[AccountCategoryRow]
+    expenses_by_category: Dict[str, Sequence["ExpenseDetail"]]
+    account_balances: Sequence[AccountBalanceRow]
+
+
+@dataclass(frozen=True)
+class ExpenseDetail:
+    date: date
+    description: str
+    payee_payer: str
+    account: str
+    amount: float
 
 
 def build_collection_summary(
@@ -87,12 +108,36 @@ def build_account_summary(
     category_totals: Dict[str, Dict[str, float]] = defaultdict(
         lambda: {"receipts": 0.0, "payments": 0.0}
     )
+    expenses_by_category: Dict[str, List[ExpenseDetail]] = defaultdict(list)
+    account_balance_data: Dict[str, Dict[str, float]] = defaultdict(
+        lambda: {"opening": 0.0, "receipts": 0.0, "payments": 0.0}
+    )
+
+    for tx in all_transactions:
+        if tx.date >= start:
+            continue
+        account = tx.account or "Unspecified"
+        account_balance_data[account]["opening"] += tx.amount
+
     for tx in period_transactions:
         category = tx.category or "Uncategorised"
+        account = tx.account or "Unspecified"
         if tx.is_receipt:
             category_totals[category]["receipts"] += tx.amount
+            account_balance_data[account]["receipts"] += tx.amount
         else:
-            category_totals[category]["payments"] += abs(tx.amount)
+            amount = abs(tx.amount)
+            category_totals[category]["payments"] += amount
+            expenses_by_category[category].append(
+                ExpenseDetail(
+                    date=tx.date,
+                    description=tx.description or tx.payee_payer or "",
+                    payee_payer=tx.payee_payer or "Unspecified",
+                    account=account,
+                    amount=round(amount, 2),
+                )
+            )
+            account_balance_data[account]["payments"] += amount
 
     categories = [
         AccountCategoryRow(
@@ -103,6 +148,17 @@ def build_account_summary(
         for category, values in sorted(category_totals.items())
     ]
 
+    account_balances = [
+        AccountBalanceRow(
+            account=account,
+            opening_balance=round(data["opening"], 2),
+            receipts=round(data["receipts"], 2),
+            payments=round(data["payments"], 2),
+            closing_balance=round(data["opening"] + data["receipts"] - data["payments"], 2),
+        )
+        for account, data in sorted(account_balance_data.items())
+    ]
+
     return AccountSummary(
         period_start=start,
         period_end=end,
@@ -111,4 +167,6 @@ def build_account_summary(
         total_receipts=round(receipts, 2),
         total_payments=round(payments, 2),
         categories=categories,
+        expenses_by_category={category: tuple(details) for category, details in expenses_by_category.items()},
+        account_balances=account_balances,
     )

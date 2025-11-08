@@ -68,3 +68,12 @@ def test_account_summary_calculates_balances_and_totals():
     categories = {row.category: row for row in summary.categories}
     assert categories["Income"].receipts == 100
     assert categories["Expense"].payments == 30
+    expenses = summary.expenses_by_category.get("Expense")
+    assert expenses is not None
+    assert len(expenses) == 1
+    detail = expenses[0]
+    assert detail.amount == 30
+    assert detail.account == "Unspecified"
+    balances = {b.account: b for b in summary.account_balances}
+    assert balances["Unspecified"].opening_balance == 200
+    assert balances["Unspecified"].closing_balance == 270

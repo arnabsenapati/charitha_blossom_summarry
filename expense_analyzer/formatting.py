@@ -67,4 +67,39 @@ def format_account_summary(summary: AccountSummary) -> str:
         for category in summary.categories
     ]
     table_text = _format_table(["Category", "Receipts", "Payments", "Net"], table_rows)
-    return "\n".join(header_lines + ["", table_text])
+
+    detail_lines: list[str] = []
+    if summary.expenses_by_category:
+        detail_lines.append("")
+        detail_lines.append("Detailed Expenses")
+        for category in sorted(summary.expenses_by_category.keys()):
+            details = summary.expenses_by_category.get(category)
+            if not details:
+                continue
+            detail_lines.append(f"{category}:")
+            for detail in details:
+                payee = detail.payee_payer or "Unspecified"
+                description = detail.description or payee
+                account = detail.account or "Unspecified"
+                detail_lines.append(
+                    f"  - {detail.date:%Y-%m-%d} | {description} | Account: {account} | Amount: {detail.amount:,.2f}"
+                )
+
+    account_lines: list[str] = []
+    if summary.account_balances:
+        headers = ["Account", "Opening", "Receipts", "Payments", "Closing"]
+        rows = [
+            [
+                balance.account or "Unspecified",
+                f"{balance.opening_balance:,.2f}",
+                f"{balance.receipts:,.2f}",
+                f"{balance.payments:,.2f}",
+                f"{balance.closing_balance:,.2f}",
+            ]
+            for balance in summary.account_balances
+        ]
+        account_lines.append("")
+        account_lines.append("Account Balances")
+        account_lines.append(_format_table(headers, rows))
+
+    return "\n".join(header_lines + ["", table_text] + detail_lines + account_lines)

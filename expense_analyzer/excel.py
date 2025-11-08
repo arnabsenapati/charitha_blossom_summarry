@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Sequence
 
 from .payee_map import format_label_from_cells, normalize_label, payees_for_label
+from .payments_map import PaymentRule
+from .models import Transaction
 from .summary import CollectionSummaryRow
 
 
@@ -48,6 +50,61 @@ def _find_collection_sheet(wb) -> tuple[object, int]:
         raise ValueError("Could not locate a header row with a 'Paid' column in the workbook")
 
     return target_sheet, header_row_idx
+
+
+def _find_sheet_by_name(wb, name: str):
+    target = _norm(name)
+    for ws in wb.worksheets:
+        if _norm(ws.title) == target:
+            return ws
+    return None
+
+
+
+def _apply_account_adjustments(account_sheet, template_account_sheet) -> None:
+    if account_sheet is None:
+        return
+
+    # Clear E5:E21 in the Account sheet
+    for row in range(5, 22):
+        account_sheet.cell(row=row, column=5).value = None
+
+    if template_account_sheet is None:
+        return
+
+    # Copy Account!C31 -> Account!C4 using template values
+    account_sheet["C4"].value = template_account_sheet["C31"].value
+
+    # Copy Account!C56:I56 -> Account!C36:I36 using template values
+    for column in range(3, 10):  # Columns C (3) through I (9)
+        account_sheet.cell(row=36, column=column).value = template_account_sheet.cell(row=56, column=column).value
+
+
+def _calculate_payment_totals(transactions: Sequence[Transaction], rules: Sequence[PaymentRule] | None) -> Dict[str, float]:
+    totals: Dict[str, float] = {}
+    if not rules:
+        return totals
+    for rule in rules:
+        total = 0.0
+        for tx in transactions:
+            if rule.matches(tx):
+                total += abs(tx.amount)
+        if total > 0:
+            totals[_norm(rule.row_label)] = round(total, 2)
+    return totals
+
+
+
+def _apply_payment_totals(account_sheet, totals: Mapping[str, float]) -> None:
+    if account_sheet is None or not totals:
+        return
+    for row_idx in range(1, account_sheet.max_row + 1):
+        label = account_sheet.cell(row=row_idx, column=2).value
+        if not isinstance(label, str):
+            continue
+        key = _norm(label)
+        if key in totals:
+            account_sheet.cell(row=row_idx, column=5).value = totals[key]
 
 
 def _detect_sections(ws, header_row_idx: int) -> List[PaidSection]:
@@ -99,7 +156,9 @@ def update_paid_columns(
     template_path: Path,
     output_path: Path,
     collection_rows: Iterable[CollectionSummaryRow],
+    period_transactions: Sequence[Transaction] | None = None,
     payee_map: Mapping[str, Sequence[str]] | None = None,
+    payment_rules: Sequence[PaymentRule] | None = None,
     fixed_paid_overrides: Mapping[str, float] | None = None,
     period_start: date | None = None,
     period_end: date | None = None,
@@ -117,6 +176,7 @@ def update_paid_columns(
         ) from exc
 
     wb = load_workbook(filename=str(template_path))
+    template_values_wb = load_workbook(filename=str(template_path), data_only=True)
     ws, header_row_idx = _find_collection_sheet(wb)
     sections = _detect_sections(ws, header_row_idx)
     payee_map = payee_map or {}
@@ -127,6 +187,7 @@ def update_paid_columns(
     }
 
     receipts_by_payee = _build_receipts_by_payee(collection_rows)
+    payment_totals = _calculate_payment_totals(period_transactions or [], payment_rules)
 
     for section in sections:
         for row_idx in range(header_row_idx + 1, ws.max_row + 1):
@@ -152,7 +213,10 @@ def update_paid_columns(
     if period_end:
         ws.cell(row=1, column=3).value = period_end
 
-    account_sheet = next((sheet for sheet in wb.worksheets if _norm(sheet.title) == "account"), None)
+    account_sheet = _find_sheet_by_name(wb, "account")
+    template_account_sheet = _find_sheet_by_name(template_values_wb, "account")
+    _apply_account_adjustments(account_sheet, template_account_sheet)
+    _apply_payment_totals(account_sheet, payment_totals)
     if account_sheet is not None:
         if period_start:
             account_sheet["A4"].value = period_start

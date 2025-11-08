@@ -1,0 +1,12 @@
+﻿row_label,category,subcategory,description_contains,payee_contains
+Housekeeping Salary,housekeeping,salary,,
+Security Salary,security,salary,,
+Mallappa(garbage),BBMP,malappa,,
+Pandu(bwssb),BBMP,Pandu,,
+Water Tanker,water tanker,water tanker,,
+BESCOM A wing,BESCOM,A WING,,
+BESCOM B wing,BESCOM,B WING,,
+BWSSB - Water Bill,bwssb,bwssb,,
+Diesel,Generator,diesel,,
+Lift AMC,lift,lift,,
+Generator AMC,Generator,repair,amc,
